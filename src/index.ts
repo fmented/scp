@@ -1,4 +1,4 @@
-import { Crawler } from "./crawler";
+import { Crawler, SerializedCrawlObject} from "./crawler";
 import {readDirRecursive, saveAsJSON} from './fileHandler'
 
 interface CrawlOption{
@@ -7,7 +7,7 @@ interface CrawlOption{
   ignore?: (file:string)=>boolean,
 }
 
-export default async function (dir:string, option?:CrawlOption) {
+export default async function (dir:string, option:CrawlOption={}) {
   const output = option?.output || 'output.json';
   const ignore = option?.ignore || (()=>false);
   const fileList = (await readDirRecursive(dir)).filter(file=>file.endsWith('.svelte')&&!ignore(file));
@@ -23,9 +23,11 @@ export default async function (dir:string, option?:CrawlOption) {
       componentExports: c.componentExports,
       moduleMethods: c.moduleMethods,
       moduleExports: c.moduleExports,
-    };
+    } as SerializedCrawlObject;
 
   })
 
   return saveAsJSON(output, crawlList);
 }
+
+export {Crawler, readDirRecursive, saveAsJSON}
