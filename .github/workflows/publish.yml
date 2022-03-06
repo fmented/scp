@@ -1,4 +1,4 @@
-on: publish
+on: release
 
 jobs:
   publish:
