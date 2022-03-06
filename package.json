@@ -1,8 +1,16 @@
 {
+    "name": "@fmented/scp",
+    "description": "A simple svelte component parser to get necessary info for documentation",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/fmented/scp/"
+    },
+    "homepage": "https://github.com/fmented/scp/",
+    "author": "fauky",
     "version": "0.2.1",
     "license": "MIT",
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts",
+    "typings": "dist/types.d.ts",
 
     "engines": {
         "node": ">=10"
@@ -25,8 +33,6 @@
         "singleQuote": true,
         "trailingComma": "es5"
     },
-    "name": "@fmented/scp",
-    "author": "fauky",
     "module": "dist/scp.esm.js",
     "devDependencies": {
         "@types/estree": "^0.0.51",
@@ -41,5 +47,9 @@
     },
     "bin": {
         "scpd": "./bin/scp"
-    }
+    },
+    "keywords": [
+        "svelte", "parser", "documentation", "utility",
+        "cli-tool"
+    ]
 }

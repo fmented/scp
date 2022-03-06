@@ -1,16 +1,9 @@
-import { Parser, ComponentInfo} from "./parser";
+import { Parser} from "./parser";
 import {readDirRecursive, saveAsJSON} from './fileHandler'
 import path from 'path'
 import fs from 'fs'
-import {Config} from './config'
+import { ComponentInfo, CrawlOption } from "./types";
 
-export type CrawlOption = {
-  output?: string,
-  ignore?: (file:string)=>boolean,
-  format?: (info:ComponentInfo)=>object
-  return?: boolean,
-  silent?: boolean
-}
 
 
 async function getInfo(dir:string, options:undefined): Promise<void>
@@ -47,4 +40,4 @@ async function getInfo(dir:string, option?:CrawlOption):Promise<ComponentInfo[]|
 
 export default getInfo
 
-export { Parser, readDirRecursive, saveAsJSON, ComponentInfo, Config }
+export { Parser }

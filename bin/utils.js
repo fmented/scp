@@ -8,14 +8,14 @@ const BASEDIR = process.cwd()
 
 const CONFIGPATH = path.join(BASEDIR, 'scp.config.js')
 
-/** @type {import('../dist').Config} */
+/** @type {import('../dist/types').Config} */
 const DEFAULTCONFIG = {
     source: path.resolve('src'),
     output: path.resolve('src/docs', 'components.json'),
 }
 
 
-/** @type {import('../dist/config').Config} */
+/** @type {import('../dist/types').Config} */
 function getConfig() {
     let CONFIG = DEFAULTCONFIG
 

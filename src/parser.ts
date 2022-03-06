@@ -2,6 +2,7 @@ import { parse } from "svelte/compiler";
 import { Ast, TemplateNode, Element } from 'svelte/types/compiler/interfaces';
 import ts from 'typescript';
 import estree from 'estree'
+import {SerializedCrawlObject, Slot, Param, Prop, Method} from './types'
 
 const modulePattern = /<script.*?context\s*?=\s*?["|'|`]?module["|'|`]?.*?>([\s\S]*?)<\/script>/;
 const scriptPattern = /<script(?![^>]+context).*?>([\s\S]*?)<\/script>/;
@@ -11,38 +12,6 @@ export const pattern = {
     module: modulePattern
 }
 
-interface Slot {
-    name: string;
-    data: string[];
-}
-
-interface Prop {
-    name: string;
-    type: string;
-    default: any;
-}
-
-interface Param extends Prop { }
-
-interface Method {
-    name: string;
-    params: Param[];
-}
-
-export interface SerializedCrawlObject{
-    slots: Slot[]
-    events: string[]
-    props: Prop[]
-    componentExports: string[]
-    moduleExports: string[]
-    moduleMethods: Method[]
-    componentMethods: Method[]
-}
-
-export interface ComponentInfo extends SerializedCrawlObject{
-    name: string,
-    path: string,
-  }
 export class Parser implements SerializedCrawlObject{
     slots: Slot[]
     events: string[]
@@ -264,7 +233,7 @@ export class Parser implements SerializedCrawlObject{
         function getExposedMethods(s: ts.FunctionDeclaration, isModule = false) {
             if (s.kind === ts.SyntaxKind.FunctionDeclaration && s.name) {
                 const name = getName(s);
-                const params = s.parameters.map((p: ts.ParameterDeclaration) => ({ name: getName(p), type: getType(p), default: getValue(p) }))
+                const params = s.parameters.map((p: ts.ParameterDeclaration) => ({ name: getName(p), type: getType(p), default: getValue(p) } as Param))
                 isModule ? self.moduleMethods.push({ name, params }) : self.componentMethods.push({ name, params });
             }
         }

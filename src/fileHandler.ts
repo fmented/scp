@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { ComponentInfo } from './parser';
+import { ComponentInfo, ReadDirRecursive} from './types';
 
 export const readDirRecursive:ReadDirRecursive = async (directory) => {
     const dir = await fs.promises.readdir(path.resolve(directory));
@@ -14,9 +14,7 @@ export const readDirRecursive:ReadDirRecursive = async (directory) => {
     return files.flat();
 }
 
-interface ReadDirRecursive{
-    (directory: string): Promise<Array<string>>
-}
+
 
 export function saveAsJSON(name:string, crawlList:ComponentInfo[]|object[]) {
     if(!fs.existsSync(path.dirname(name))) {
