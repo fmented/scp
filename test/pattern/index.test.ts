@@ -1,4 +1,4 @@
-import {pattern} from '../../src/crawler'
+import {pattern} from '../../src/parser'
 
 const justScript = `
 <script>

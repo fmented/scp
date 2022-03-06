@@ -3,9 +3,7 @@
     "license": "MIT",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
-    "files": [
-        "dist"
-    ],
+
     "engines": {
         "node": ">=10"
     },
