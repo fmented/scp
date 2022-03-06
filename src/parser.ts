@@ -1,6 +1,7 @@
 import { parse } from "svelte/compiler";
 import { Ast, TemplateNode, Element } from 'svelte/types/compiler/interfaces';
 import ts from 'typescript';
+import estree from 'estree'
 
 const modulePattern = /<script.*?context\s*?=\s*?["|'|`]?module["|'|`]?.*?>([\s\S]*?)<\/script>/;
 const scriptPattern = /<script(?![^>]+context).*?>([\s\S]*?)<\/script>/;
@@ -37,7 +38,12 @@ export interface SerializedCrawlObject{
     moduleMethods: Method[]
     componentMethods: Method[]
 }
-export class Crawler implements SerializedCrawlObject{
+
+export interface ComponentInfo extends SerializedCrawlObject{
+    name: string,
+    path: string,
+  }
+export class Parser implements SerializedCrawlObject{
     slots: Slot[]
     events: string[]
     props: Prop[]
@@ -57,7 +63,7 @@ export class Crawler implements SerializedCrawlObject{
     script?: string
     scriptOuter?: string
 
-    constructor(template: string) {
+    constructor(template: string, silentError:boolean=false) {
 
         this.template = template;
 
@@ -100,7 +106,13 @@ export class Crawler implements SerializedCrawlObject{
             this.hasScript = true;
         }
 
-        this.parse();
+        try {
+            this.parse();
+        } 
+        catch (error) {
+            if(!silentError) throw(error)
+        }
+
     }
 
     private transpile() {
@@ -174,10 +186,10 @@ export class Crawler implements SerializedCrawlObject{
         }
         const self = this;
 
-        function findEvent(node: any) {
+        function findEvent(node: estree.Statement) {
             if (node.type == 'VariableDeclaration' && node.declarations.length && node.declarations[0].init) {
-                if (checkIfEventDispatcher(node.declarations[0].init)) {
-                    const instance = node.declarations[0].id.name
+                if (checkIfEventDispatcher(node.declarations[0].init as estree.CallExpression)) {
+                    const instance = (node.declarations[0].id as estree.Identifier).name
                     const regex = new RegExp(`${instance}\\(([\\S]*?)[,|\\)]`, 'g');
                     const match = self.template.matchAll(regex)
                     for (const m of match) {
@@ -187,15 +199,15 @@ export class Crawler implements SerializedCrawlObject{
             }
         }
 
-        function checkIfEventDispatcher(d: any): boolean {
-            if (d.type == 'CallExpression' && d?.callee?.name == 'createEventDispatcher') {
+        function checkIfEventDispatcher(d: estree.CallExpression): boolean {
+            if (d.type == 'CallExpression' && (d?.callee as estree.Identifier).name == 'createEventDispatcher') {
                 return true;
             }
             return false;
         }
 
         if (this.templateAST?.instance) {
-            this.templateAST.instance.content.body.forEach(node => findEvent(node));
+            this.templateAST.instance.content.body.forEach(node => findEvent(node as estree.Statement));
         }
 
     }
@@ -251,7 +263,7 @@ export class Crawler implements SerializedCrawlObject{
 
         function getExposedMethods(s: ts.FunctionDeclaration, isModule = false) {
             if (s.kind === ts.SyntaxKind.FunctionDeclaration && s.name) {
-                const name = s.name.getText();
+                const name = getName(s);
                 const params = s.parameters.map((p: ts.ParameterDeclaration) => ({ name: getName(p), type: getType(p), default: getValue(p) }))
                 isModule ? self.moduleMethods.push({ name, params }) : self.componentMethods.push({ name, params });
             }
