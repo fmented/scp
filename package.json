@@ -7,11 +7,10 @@
     },
     "homepage": "https://github.com/fmented/scp/",
     "author": "fauky",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "license": "MIT",
     "main": "dist/index.js",
     "typings": "dist/types.d.ts",
-
     "engines": {
         "node": ">=10"
     },
@@ -49,7 +48,10 @@
         "scpd": "./bin/scp"
     },
     "keywords": [
-        "svelte", "parser", "documentation", "utility",
+        "svelte",
+        "parser",
+        "documentation",
+        "utility",
         "cli-tool"
     ]
 }
