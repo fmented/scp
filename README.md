@@ -1,6 +1,6 @@
 # Intro
-scp stands for Svelte Component Parser
-it can analyze .svelte file and gives necessary information for documentation such as
+scp stands for ~~Secure Contain Protect~~ Svelte Component Parser
+it can analyze .svelte file and give necessary information for documentation such as
 - props
 - slots
 - events
@@ -8,6 +8,8 @@ it can analyze .svelte file and gives necessary information for documentation su
 - module methods
 - component exports
 - module exports
+
+<br> 
 
 # Instalation
 
@@ -21,8 +23,9 @@ to install it globally
 npm i @fmented/scp -g
 ```
 
-## CLI
-<hr/>
+<br>
+
+# CLI
 
 create <mark>scp.config.js</mark> in your project root 
 
@@ -38,7 +41,7 @@ create <mark>scp.config.js</mark> in your project root
         //if you want to skip specific file
         ignore: (file)=>file=='ThisComponent.svelte',
 
-        //if you need specific formatting 
+        //if you need S̶p̶e̶c̶i̶a̶l̶ ̶C̶o̶n̶t̶a̶i̶n̶m̶e̶n̶t̶ ̶P̶r̶o̶c̶e̶d̶u̶r̶e̶s̶  specific formatting 
         format: (info)=>({slots:info.slots})
     }   
 
@@ -58,10 +61,13 @@ or to watch every changes, run
 scpd --watch
 ```
 
+> __⚠ you need to have watch package to be installed__
+
 > __⚠ be aware, when you do this, scp will ignore any error that occurs during parsing__
 
-## Javascipt 
-<hr/>
+<br>
+
+# Javascipt 
 
 ```javascript
 import scp from '@fmented/scp'
@@ -83,9 +89,29 @@ scp('src/components', {return:true}).then(arr=>{
         console.log(data)
     })
 })
+
+//output and format will be ignored if return is set to true
+const data = await scp('src/components', {
+  return:true,
+
+  //will be ignored
+  format:data=>({slots:data.slots}),
+  output:'out.json'
+  })
+
 ```
 
-### Default Output Format
+<br>
+
+# TODO
+- [ ] better type system
+- [ ] better error handling
+- [ ] better way to parse events
+- [ ] ability to parse component that uses preprocessor, eg. pub
+
+<br>
+
+### Output Example With Default Formatting
 <hr/>
 
 ```json
@@ -208,9 +234,3 @@ scp('src/components', {return:true}).then(arr=>{
   }
 ]
 ```
-
-# TODO
-- [ ] better type system
-- [ ] better error handling
-- [ ] ability to parse component that uses preprocessor, eg. pub
-

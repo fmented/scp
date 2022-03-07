@@ -41,17 +41,18 @@
         "tslib": "^2.3.1",
         "typescript": "^3.9.10"
     },
-    "dependencies": {
-        "watch": "^1.0.2"
-    },
     "bin": {
         "scpd": "./bin/scp"
     },
     "keywords": [
+        "scp",
         "svelte",
         "parser",
         "documentation",
         "utility",
         "cli-tool"
-    ]
+    ],
+    "optionalDependencies": {
+        "watch": "^1.0.2"
+    }
 }
